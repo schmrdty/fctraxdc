@@ -1,0 +1,29 @@
+// Object to hold translations for different languages
+const translations = {
+es': { // Espanol
+    'thanks': 'Gracias por usar el rastreador de tokens Toker'
+    'instructions: ''
+
+  },
+  'bn': { // Bengali
+    'thanks': 'টোকার টোকেন ট্র্যাকার ব্যবহার করার জন্য ধন্যবাদ'
+    
+  },
+  'ko': { // Korean
+    'thanks': '토커 토큰 트래커를 사용해 주셔서 감사합니다'
+    
+  },
+  // ... other languages
+};
+
+// Function to change the language of the iframe content
+function changeLanguage(lang) {
+  const iframeDocument = document.getElementById('myIframe').contentWindow.document;
+  iframeDocument.getElementById('thanksText').innerText = translations[lang]['thanks'];
+  // ... update other text elements based on the selected language
+}
+
+changeLanguage('es'); // Espanol
+changeLanguage('ko'); // Korean
+changeLanguage('bn'); // Bengali
+

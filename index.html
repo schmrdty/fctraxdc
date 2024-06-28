@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Tracker</title>
+    <meta property="og:title" content="Token Tracker" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="schmrdty.com/tokentracker" />
+    <meta property="og:image" content="shenanigans.ooo/pngs/morph0.png" />
+    <meta property="fc:frame" content="vNext" />
+    <meta property="fc:frame:image" content="YOUR_IMAGE_URL_FOR_PAGE" />
+    <meta property="fc:frame:button:1" content="Next" />
+    <script>
+        async function fetchTokenDetails() {
+            const contractAddress = document.getElementById('contractAddress').value;
+            const response = await fetch('/fetchTokenDetails', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contractAddress })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('tokenName').innerText = data.tokenName;
+                document.getElementById('tokenPrice').innerText = `$${data.tokenPrice}`;
+                document.getElementById('step2').style.display = 'block';
+                document.getElementById('step1').style.display = 'none';
+            } else {
+                alert(data.error);
+            }
+        }
+
+        async function trackToken() {
+            const contractAddress = document.getElementById('contractAddress').value;
+            const tokenName = document.getElementById('tokenName').innerText;
+            const tokenPrice = document.getElementById('tokenPrice').innerText;
+            const percentage = document.getElementById('percentage').value;
+            const userFid = 'YOUR_USER_FID'; // Get this dynamically if required
+
+            const response = await fetch('/trackToken', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contractAddress, tokenName, tokenPrice, percentage, userFid })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('step3').style.display = 'block';
+                document.getElementById('step2').style.display = 'none';
+            } else {
+                alert(data.error);
+            }
+        }
+
+        function goBack() {
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step3').style.display = 'none';
+        }
+
+        function finish() {
+            document.getElementById('step4').style.display = 'block';
+            document.getElementById('step3').style.display = 'none';
+        }
+
+        function trackAnotherToken() {
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step3').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <div id="step1">
+        <h1>Enter Token Contract Address</h1>
+        <input type="text" id="contractAddress" placeholder="Contract Address">
+        <button onclick="fetchTokenDetails()">Next</button>
+    </div>
+
+    <div id="step2" style="display:none;">
+        <h1>Token Information & Price Movement</h1>
+        <p>Token Name: <span id="tokenName"></span></p>
+        <p>Token Price: <span id="tokenPrice"></span></p>
+        <input type="number" id="percentage" placeholder="Percentage Change">
+        <button onclick="trackToken()">Next</button>
+        <button onclick="goBack()">Back</button>
+    </div>
+
+    <div id="step3" style="display:none;">
+        <h1>Confirmation, Track another or Finish?</h1>
+        <button onclick="trackAnotherToken()">Track Another Token</button>
+        <button onclick="finish()">Finished </button>
+    </div>
+
+    <div id="step4" style="display:none;">
+        <h1>Thanks for tracking, check your Warpcast Nofitications or my sources.</h1>
+        <img src="morph0.png" alt="Confirmation Image">
+        <button onclick="window.location.href='https://morpho.com'">Morpho</button>
+        <button onclick="window.location.href='https://0x.org'">0x</button>
+        <button onclick="window.location.href='https://matcha.xyz'">Matcha</button>
+        <button onclick="window.location.href='https://neynar.com'">Neynar</button>
+    </div>
+</body>
+</html>
